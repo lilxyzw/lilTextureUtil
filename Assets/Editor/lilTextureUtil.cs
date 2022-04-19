@@ -329,18 +329,18 @@ namespace lilTextureUtil
         // Name checker
         private static bool CheckMetallic(string path)
         {
-            return path.Contains("metallic", StringComparison.OrdinalIgnoreCase) ||
-                path.Contains("metalness", StringComparison.OrdinalIgnoreCase);
+            return path.IndexOf("metallic", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                path.IndexOf("metalness", StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         private static bool CheckRoughness(string path)
         {
-            return path.Contains("roughness", StringComparison.OrdinalIgnoreCase);
+            return path.IndexOf("roughness", StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         private static bool CheckSmoothness(string path)
         {
-            return path.Contains("smoothness", StringComparison.OrdinalIgnoreCase);
+            return path.IndexOf("smoothness", StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------
