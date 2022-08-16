@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -40,7 +41,7 @@ namespace lilTextureUtil
             foreach(Object obj in Selection.objects)
             {
                 string path = AssetDatabase.GetAssetPath(obj);
-                if(!CheckImageExtension(path)) return;
+                if(!CheckAssetIsTexture(obj)) return;
 
                 GetTexture2D(path, out Texture2D tex, out Color[] pixels);
 
@@ -54,7 +55,7 @@ namespace lilTextureUtil
         }
 
         [MenuItem(menuPathConvertNormal, true, menuPriorityConvertNormal)]
-        private static bool CheckConvertNormal(){ return CheckImageExtension(); }
+        private static bool CheckConvertNormal(){ return CheckAssetIsTexture(); }
 
         //------------------------------------------------------------------------------------------------------------------------------
         // [Texture] Roughness <-> Smoothness
@@ -64,7 +65,7 @@ namespace lilTextureUtil
             foreach(Object obj in Selection.objects)
             {
                 string path = AssetDatabase.GetAssetPath(obj);
-                if(!CheckImageExtension(path)) return;
+                if(!CheckAssetIsTexture(obj)) return;
 
                 GetTexture2D(path, out Texture2D tex, out Color[] pixels);
 
@@ -80,7 +81,7 @@ namespace lilTextureUtil
         }
 
         [MenuItem(menuPathR2S, true, menuPriorityR2S)]
-        private static bool CheckR2S(){ return CheckImageExtension(); }
+        private static bool CheckR2S(){ return CheckAssetIsTexture(); }
 
         //------------------------------------------------------------------------------------------------------------------------------
         // [Texture] Perceptual Roughness <-> Smoothness
@@ -90,7 +91,7 @@ namespace lilTextureUtil
             foreach(Object obj in Selection.objects)
             {
                 string path = AssetDatabase.GetAssetPath(obj);
-                if(!CheckImageExtension(path)) return;
+                if(!CheckAssetIsTexture(obj)) return;
 
                 GetTexture2D(path, out Texture2D tex, out Color[] pixels);
 
@@ -106,7 +107,7 @@ namespace lilTextureUtil
         }
 
         [MenuItem(menuPathPR2S, true, menuPriorityPR2S)]
-        private static bool CheckPR2S(){ return CheckImageExtension(); }
+        private static bool CheckPR2S(){ return CheckAssetIsTexture(); }
 
         //------------------------------------------------------------------------------------------------------------------------------
         // [Texture] Roughness -> MetallicGlossMap
@@ -116,7 +117,7 @@ namespace lilTextureUtil
             foreach(Object obj in Selection.objects)
             {
                 string path = AssetDatabase.GetAssetPath(obj);
-                if(!CheckImageExtension(path)) return;
+                if(!CheckAssetIsTexture(obj)) return;
 
                 GetTexture2D(path, out Texture2D tex, out Color[] pixels);
 
@@ -133,7 +134,7 @@ namespace lilTextureUtil
         }
 
         [MenuItem(menuPathR2MG, true, menuPriorityR2MG)]
-        private static bool CheckR2MG(){ return CheckImageExtension(); }
+        private static bool CheckR2MG(){ return CheckAssetIsTexture(); }
 
         //------------------------------------------------------------------------------------------------------------------------------
         // [Texture] Perceptual Roughness -> MetallicGlossMap
@@ -143,7 +144,7 @@ namespace lilTextureUtil
             foreach(Object obj in Selection.objects)
             {
                 string path = AssetDatabase.GetAssetPath(obj);
-                if(!CheckImageExtension(path)) return;
+                if(!CheckAssetIsTexture(obj)) return;
 
                 GetTexture2D(path, out Texture2D tex, out Color[] pixels);
 
@@ -160,7 +161,7 @@ namespace lilTextureUtil
         }
 
         [MenuItem(menuPathPR2MG, true, menuPriorityPR2MG)]
-        private static bool CheckPR2MG(){ return CheckImageExtension(); }
+        private static bool CheckPR2MG(){ return CheckAssetIsTexture(); }
 
         //------------------------------------------------------------------------------------------------------------------------------
         // [Texture] Smoothness -> MetallicGlossMap
@@ -170,7 +171,7 @@ namespace lilTextureUtil
             foreach(Object obj in Selection.objects)
             {
                 string path = AssetDatabase.GetAssetPath(obj);
-                if(!CheckImageExtension(path)) return;
+                if(!CheckAssetIsTexture(obj)) return;
 
                 GetTexture2D(path, out Texture2D tex, out Color[] pixels);
 
@@ -187,7 +188,7 @@ namespace lilTextureUtil
         }
 
         [MenuItem(menuPathS2MG, true, menuPriorityS2MG)]
-        private static bool CheckS2MG(){ return CheckImageExtension(); }
+        private static bool CheckS2MG(){ return CheckAssetIsTexture(); }
 
         //------------------------------------------------------------------------------------------------------------------------------
         // [Texture] Metallic & Roughness -> MetallicGlossMap
@@ -200,7 +201,7 @@ namespace lilTextureUtil
             foreach(Object obj in Selection.objects)
             {
                 string path = AssetDatabase.GetAssetPath(obj);
-                if(!CheckImageExtension(path)) continue;
+                if(!CheckAssetIsTexture(obj)) continue;
                 if(CheckMetallic(path)) pathM = path;
                 if(CheckRoughness(path)) pathR = path;
             }
@@ -222,7 +223,7 @@ namespace lilTextureUtil
         }
 
         [MenuItem(menuPathMR2MG, true, menuPriorityMR2MG)]
-        private static bool CheckMR2MG(){ return CheckImageExtension(); }
+        private static bool CheckMR2MG(){ return CheckAssetIsTexture(); }
 
         //------------------------------------------------------------------------------------------------------------------------------
         // [Texture] Metallic & Perceptual Roughness -> MetallicGlossMap
@@ -235,7 +236,7 @@ namespace lilTextureUtil
             foreach(Object obj in Selection.objects)
             {
                 string path = AssetDatabase.GetAssetPath(obj);
-                if(!CheckImageExtension(path)) continue;
+                if(!CheckAssetIsTexture(obj)) continue;
                 if(CheckMetallic(path)) pathM = path;
                 if(CheckRoughness(path)) pathR = path;
             }
@@ -257,7 +258,7 @@ namespace lilTextureUtil
         }
 
         [MenuItem(menuPathMPR2MG, true, menuPriorityMPR2MG)]
-        private static bool CheckMPR2MG(){ return CheckImageExtension(); }
+        private static bool CheckMPR2MG(){ return CheckAssetIsTexture(); }
 
         //------------------------------------------------------------------------------------------------------------------------------
         // [Texture] Metallic & Smoothness -> MetallicGlossMap
@@ -270,7 +271,7 @@ namespace lilTextureUtil
             foreach(Object obj in Selection.objects)
             {
                 string path = AssetDatabase.GetAssetPath(obj);
-                if(!CheckImageExtension(path)) continue;
+                if(!CheckAssetIsTexture(obj)) continue;
                 if(CheckMetallic(path)) pathM = path;
                 if(CheckSmoothness(path)) pathS = path;
             }
@@ -292,7 +293,7 @@ namespace lilTextureUtil
         }
 
         [MenuItem(menuPathMS2MG, true, menuPriorityMS2MG)]
-        private static bool CheckMS2MG(){ return CheckImageExtension(); }
+        private static bool CheckMS2MG(){ return CheckAssetIsTexture(); }
 
         //------------------------------------------------------------------------------------------------------------------------------
         // Format checker
@@ -307,20 +308,17 @@ namespace lilTextureUtil
             return false;
         }
 
-        private static bool CheckImageExtension(string assetPath)
+        private static bool CheckAssetIsTexture(Object obj)
         {
-            return assetPath.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
-                assetPath.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
-                assetPath.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase);
+            return obj is Texture2D;
         }
 
-        private static bool CheckImageExtension()
+        private static bool CheckAssetIsTexture()
         {
             if(Selection.objects == null || Selection.objects.Length == 0) return false;
             foreach(Object obj in Selection.objects)
             {
-                string assetPath = AssetDatabase.GetAssetPath(obj);
-                if(CheckImageExtension(assetPath)) return true;
+                if(obj is Texture2D) return true;
             }
             return false;
         }
@@ -349,8 +347,33 @@ namespace lilTextureUtil
         {
             tex = new Texture2D(2, 2, TextureFormat.ARGB32, true, true);
             byte[] bytes = File.ReadAllBytes(Path.GetFullPath(path));
-            tex.LoadImage(bytes);
-            pixels = tex.GetPixels();
+            if(!tex.LoadImage(bytes))
+            {
+                tex = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+                GetReadableTexture(ref tex);
+            }
+            if(tex != null) pixels = tex.GetPixels();
+            else            pixels = null;
+        }
+
+        private static void GetReadableTexture(ref Texture2D tex)
+        {
+            if(tex == null) return;
+
+            #if UNITY_2018_3_OR_NEWER
+            if(!tex.isReadable)
+            #endif
+            {
+                RenderTexture bufRT = RenderTexture.active;
+                RenderTexture texR = RenderTexture.GetTemporary(tex.width, tex.height);
+                Graphics.Blit(tex, texR);
+                RenderTexture.active = texR;
+                tex = new Texture2D(texR.width, texR.height);
+                tex.ReadPixels(new Rect(0, 0, texR.width, texR.height), 0, 0);
+                tex.Apply();
+                RenderTexture.active = bufRT;
+                RenderTexture.ReleaseTemporary(texR);
+            }
         }
 
         private static void SaveTexture2D(string path, Texture2D tex, Color[] pixels)
@@ -371,3 +394,4 @@ namespace lilTextureUtil
         }
     }
 }
+#endif
