@@ -14,13 +14,13 @@ namespace lilTextureUtil
         private const string menuPathAssets                 = "Assets/_lil/TextureUtil/";
         private const string menuPathConvertNormal          = menuPathAssets + "[Texture] Convert normal map (DirectX <-> OpenGL)";
         private const string menuPathS2MG                   = menuPathAssets + "[Texture] Smoothness/Smoothness -> MetallicGlossMap";
-        private const string menuPathMS2MG                  = menuPathAssets + "[Texture] Smoothness/Metallic and Smoothness -> MetallicGlossMap";
+        private const string menuPathMS2MG                  = menuPathAssets + "[Texture] Smoothness/Metallic, Smoothness (, Occlusion, Detail) -> MetallicGlossMap (MaskMap)";
         private const string menuPathPR2S                   = menuPathAssets + "[Texture] Perceptual Roughness/Roughness -> Smoothness";
         private const string menuPathPR2MG                  = menuPathAssets + "[Texture] Perceptual Roughness/Roughness -> MetallicGlossMap";
-        private const string menuPathMPR2MG                 = menuPathAssets + "[Texture] Perceptual Roughness/Metallic and Roughness -> MetallicGlossMap";
+        private const string menuPathMPR2MG                 = menuPathAssets + "[Texture] Perceptual Roughness/Metallic, Roughness (, Occlusion, Detail) -> MetallicGlossMap (MaskMap)";
         private const string menuPathR2S                    = menuPathAssets + "[Texture] Roughness/Roughness -> Smoothness";
         private const string menuPathR2MG                   = menuPathAssets + "[Texture] Roughness/Roughness -> MetallicGlossMap";
-        private const string menuPathMR2MG                  = menuPathAssets + "[Texture] Roughness/Metallic and Roughness -> MetallicGlossMap";
+        private const string menuPathMR2MG                  = menuPathAssets + "[Texture] Roughness/Metallic, Roughness (, Occlusion, Detail) -> MetallicGlossMap (MaskMap)";
 
         private const int menuPriorityAssets = 1100;
         private const int menuPriorityConvertNormal         = menuPriorityAssets + 0; // [Texture] Convert normal map (DirectX <-> OpenGL)
@@ -198,12 +198,16 @@ namespace lilTextureUtil
             if(Selection.objects.Length < 2) return;
             string pathM = null;
             string pathR = null;
+            string pathO = null;
+            string pathD = null;
             foreach(Object obj in Selection.objects)
             {
                 string path = AssetDatabase.GetAssetPath(obj);
                 if(!CheckAssetIsTexture(obj)) continue;
                 if(CheckMetallic(path)) pathM = path;
                 if(CheckRoughness(path)) pathR = path;
+                if(CheckOcclusion(path)) pathO = path;
+                if(CheckDetail(path)) pathD = path;
             }
 
             if(string.IsNullOrEmpty(pathM) || string.IsNullOrEmpty(pathR)) return;
@@ -217,6 +221,8 @@ namespace lilTextureUtil
                 pixelsM[i].g = 1.0f;
                 pixelsM[i].b = 1.0f;
             }
+            CopyOcculusion(pathO, ref pixelsM);
+            CopyDetail(pathD, ref pixelsM);
 
             Object.DestroyImmediate(texR);
             SaveTexture2D(pathM, texM, pixelsM);
@@ -233,12 +239,16 @@ namespace lilTextureUtil
             if(Selection.objects.Length < 2) return;
             string pathM = null;
             string pathR = null;
+            string pathO = null;
+            string pathD = null;
             foreach(Object obj in Selection.objects)
             {
                 string path = AssetDatabase.GetAssetPath(obj);
                 if(!CheckAssetIsTexture(obj)) continue;
                 if(CheckMetallic(path)) pathM = path;
                 if(CheckRoughness(path)) pathR = path;
+                if(CheckOcclusion(path)) pathO = path;
+                if(CheckDetail(path)) pathD = path;
             }
 
             if(string.IsNullOrEmpty(pathM) || string.IsNullOrEmpty(pathR)) return;
@@ -252,6 +262,8 @@ namespace lilTextureUtil
                 pixelsM[i].g = 1.0f;
                 pixelsM[i].b = 1.0f;
             }
+            CopyOcculusion(pathO, ref pixelsM);
+            CopyDetail(pathD, ref pixelsM);
 
             Object.DestroyImmediate(texR);
             SaveTexture2D(pathM, texM, pixelsM);
@@ -268,12 +280,16 @@ namespace lilTextureUtil
             if(Selection.objects.Length < 2) return;
             string pathM = null;
             string pathS = null;
+            string pathO = null;
+            string pathD = null;
             foreach(Object obj in Selection.objects)
             {
                 string path = AssetDatabase.GetAssetPath(obj);
                 if(!CheckAssetIsTexture(obj)) continue;
                 if(CheckMetallic(path)) pathM = path;
                 if(CheckSmoothness(path)) pathS = path;
+                if(CheckOcclusion(path)) pathO = path;
+                if(CheckDetail(path)) pathD = path;
             }
 
             if(string.IsNullOrEmpty(pathM) || string.IsNullOrEmpty(pathS)) return;
@@ -287,6 +303,8 @@ namespace lilTextureUtil
                 pixelsM[i].g = 1.0f;
                 pixelsM[i].b = 1.0f;
             }
+            CopyOcculusion(pathO, ref pixelsM);
+            CopyDetail(pathD, ref pixelsM);
 
             Object.DestroyImmediate(texS);
             SaveTexture2D(pathM, texM, pixelsM);
@@ -339,6 +357,37 @@ namespace lilTextureUtil
         private static bool CheckSmoothness(string path)
         {
             return path.IndexOf("smoothness", StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private static bool CheckOcclusion(string path)
+        {
+            return path.IndexOf("occlusion", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                path.IndexOf("AO") >= 0;
+        }
+
+        private static bool CheckDetail(string path)
+        {
+            return path.IndexOf("detail", StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private static void CopyOcculusion(string path, ref Color[] pixels)
+        {
+            if(string.IsNullOrEmpty(path)) return;
+            GetTexture2D(path, out Texture2D texO, out Color[] pixelsO);
+            for(int i = 0; i < pixels.Length; i++)
+            {
+                pixels[i].g = pixelsO[i].r;
+            }
+        }
+
+        private static void CopyDetail(string path, ref Color[] pixels)
+        {
+            if(string.IsNullOrEmpty(path)) return;
+            GetTexture2D(path, out Texture2D texD, out Color[] pixelsD);
+            for(int i = 0; i < pixels.Length; i++)
+            {
+                pixels[i].b = pixelsD[i].r;
+            }
         }
 
         //------------------------------------------------------------------------------------------------------------------------------
